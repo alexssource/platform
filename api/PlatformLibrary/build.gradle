@@ -1,0 +1,47 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// Add provided jars on the compile classpath, this will
+// not add the transitive dependencies of each jar.
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+dependencies() {
+    compile 'org.apache.commons:commons-lang3:3.5'
+    // it has useful method `String ExceptionUtils.getStackTrace(Throwable)`
+    compile "org.slf4j:slf4j-api:${gradle.log4jVersion}"
+    compile "org.slf4j:slf4j-log4j12:${gradle.log4jVersion}"
+
+    provided "org.springframework.security:spring-security-core:${gradle.springSecurityVersion}"
+    provided 'com.fasterxml.jackson.core:jackson-annotations:2.8.0'
+}
+
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+
+    jdt {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+}
+
+idea {
+    module {
+        jdkName = "1.8"
+        downloadJavadoc = true
+        downloadSources = true
+        scopes.PROVIDED.plus += [configurations.provided]
+    }
+}

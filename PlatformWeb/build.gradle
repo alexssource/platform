@@ -1,0 +1,85 @@
+dependencies() {
+}
+
+task cleanDist {
+    doLast {
+        println "Cleaning the dist directory"
+        exec {
+            commandLine 'rm', '-Rf', 'dist'
+        }
+        println "The dist directory has been cleaned"
+    }
+}
+
+task buildAngularAppDevelopment {
+    doLast {
+        println "Building PlatformWeb for in development mode"
+        exec {
+            commandLine 'npm', 'install'
+        }
+        exec {
+            commandLine 'ng', 'build', '--target=development'
+        }
+        println "PlatformWeb was build for development mode"
+    }
+}
+
+task buildAngularAppProduction {
+    doLast {
+        println "Building PlatformWeb for in production mode"
+        exec {
+            commandLine 'npm', 'install'
+        }
+        exec {
+            commandLine 'ng', 'build', '--target=production'
+        }
+        println "PlatformWeb was build for production mode"
+    }
+}
+
+task cleanPlatformWebHomeDirectory {
+    doLast {
+        def final PLATFORM_WEB_HOME = System.env.PLATFORM_WEB_HOME
+
+        if (!PLATFORM_WEB_HOME) {
+            println 'The PLATFORM_WEB_HOME is not set'
+            System.exit(1)
+        }
+
+        println "Removing the ${PLATFORM_WEB_HOME} directory"
+        exec {
+            commandLine 'rm', '-Rf', "${PLATFORM_WEB_HOME}"
+        }
+        println "The ${PLATFORM_WEB_HOME} directory has been removed"
+
+        println "Creating the ${PLATFORM_WEB_HOME} directory"
+        exec {
+            commandLine 'mkdir', PLATFORM_WEB_HOME
+        }
+        println "The ${PLATFORM_WEB_HOME} directory has been created"
+    }
+}
+
+task copyBuildFilesToWebHomeDirectory {
+    doLast {
+        def final PLATFORM_WEB_HOME = System.env.PLATFORM_WEB_HOME
+
+        if (!PLATFORM_WEB_HOME) {
+            println 'The PLATFORM_WEB_HOME is not set'
+            System.exit(1)
+        }
+
+        println "Copy build files into ${PLATFORM_WEB_HOME}"
+        copy {
+            from 'dist'
+            into PLATFORM_WEB_HOME
+        }
+        println "Copy done"
+    }
+}
+
+// Development build:
+// gradle cleanDist buildAngularAppDevelopment cleanPlatformWebHomeDirectory copyBuildFilesToWebHomeDirectory
+
+// Production build:
+// gradle cleanDist buildAngularAppProduction cleanPlatformWebHomeDirectory copyBuildFilesToWebHomeDirectory

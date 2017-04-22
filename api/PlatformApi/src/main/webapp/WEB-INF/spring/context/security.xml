@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/security
+                http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!--
+        Этот файл должен импортироваться из spring-context.xml
+    -->
+
+    <!-- Включение возможности защиты с помощью АННОТАЦИЙ SpringSecurity -->
+    <!-- secured-annotations  - включает аннотацию @Secured -->
+    <!-- pre-post-annotations - включает интерцепторы @PreAuthorize и @PostAuthorize -->
+    <!-- jsr250-annotations - включает JEE-аннотации JSR250 -->
+    <global-method-security secured-annotations="enabled" pre-post-annotations="enabled"/>
+
+    <!--
+    ° ? matches a single character
+    ° * matches zero or more characters, excluding /
+    ° ** matches zero or more directories in a path
+    -->
+    <!--<http pattern="/resources/**" security="none"/>-->
+    <http pattern="/api/auth/login" security="none"/>
+    <http pattern="/api/auth/signup" security="none"/>
+    <http pattern="/api/auth/change-password" security="none"/>
+    <http pattern="/api/config" security="none"/>
+    <http pattern="/api/payment/updatePaymentTransaction" security="none"/>
+    <http pattern="/api/payment/getTransactionStatus" security="none"/>
+
+    <http pattern="/api/**" entry-point-ref="restAuthenticationEntryPoint" create-session="stateless"
+          use-expressions="true">
+        <csrf disabled="true"/>
+        <custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter"/>
+    </http>
+
+
+    <beans:bean id="jwtAuthenticationFilter" class="com.platform.api.utils.JwtAuthenticationFilter">
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="authenticationSuccessHandler" ref="jwtAuthenticationSuccessHandler"/>
+    </beans:bean>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="jwtAuthenticationProvider"/>
+    </authentication-manager>
+
+
+    <beans:bean id="restAuthenticationEntryPoint" class="com.platform.api.utils.RestAuthenticationEntryPoint"/>
+    <beans:bean id="jwtAuthenticationSuccessHandler" class="com.platform.api.utils.JwtAuthenticationSuccessHandler"/>
+    <beans:bean id="jwtAuthenticationProvider" class="com.platform.api.utils.JwtAuthenticationProvider"/>
+    <beans:bean id="jwtTokenValidator" class="com.platform.api.utils.JwtTokenValidator"/>
+    <beans:bean id="jwtTokenGenerator" class="com.platform.api.utils.JwtTokenGenerator"/>
+
+</beans:beans>

@@ -1,0 +1,5 @@
+<ul *ngIf="pageable.totalPages > 1" class="pagination {{ cssClass }}">
+    <li *ngFor="let page of getPageRange()" [ngClass]="pageable.page == page ? 'active' : ''">
+        <a (click)="changePage(page)">{{ page + 1 }}</a>
+    </li>
+</ul>

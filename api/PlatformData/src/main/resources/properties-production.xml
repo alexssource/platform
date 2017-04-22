@@ -1,0 +1,18 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+       profile="production">
+
+    <!-- read properties files -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <array value-type="java.lang.String">
+                <value>file:///etc/platform/mail.properties</value>
+                <value>file:///etc/platform/payment.properties</value>
+                <value>file:///etc/platform/user.properties</value>
+...
+            </array>
+        </property>
+    </bean>
+
+</beans>

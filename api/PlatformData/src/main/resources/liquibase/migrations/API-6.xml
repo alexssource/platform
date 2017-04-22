@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet id="API-6-1" author="Alexander Kozlov">
+        <createTable tableName="TARIFF">
+            <column name="ID" type="NUMBER(10, 0)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(16)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="PRICE" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR2(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TARIFF_ROLE" type="VARCHAR2(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="API-6-2" author="Alexander Kozlov">
+        <createSequence sequenceName="SQ_TARIFF" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="API-6-3" author="Alexander Kozlov">
+        <addColumn tableName="PAYMENT_TRANSACTION">
+            <column name="TARIFF_ID" type="NUMBER(10, 0)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="API-6-4" author="Alexander Kozlov">
+        <addForeignKeyConstraint baseTableName="PAYMENT_TRANSACTION"
+                                 baseColumnNames="TARIFF_ID"
+                                 constraintName="FK_PAYMENT_TARIFF_ID"
+                                 referencedTableName="TARIFF"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+
+    <changeSet id="API-6-5" author="Alexander Kozlov">
+        <insert tableName="TARIFF">
+            <column name="ID" valueComputed="nextval('SQ_TARIFF')"></column>
+            <column name="NAME" value="STARTER"/>
+            <column name="PRICE" value="1.0"/>
+            <column name="DESCRIPTION" value="Starter - 1 RUB"/>
+            <column name="TARIFF_ROLE" value="ROLE_STARTER"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

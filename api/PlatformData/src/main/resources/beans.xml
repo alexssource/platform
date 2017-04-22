@@ -1,0 +1,56 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <!-- read properties files -->
+    <import resource="properties-*.xml"/>
+
+    <bean id="mailService" class="com.platform.data.service.impl.MailServiceImpl">
+        <property name="host" value="${mail.smtp.host}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+        <property name="from" value="${mail.from}"/>
+        <property name="auth" value="${mail.smtp.auth}"/>
+        <property name="fallback" value="${mail.smtp.socketFactory.fallback}"/>
+        <property name="port" value="${mail.smtp.port}"/>
+        <property name="protocol" value="${mail.protocol}"/>
+        <property name="quitwait" value="${mail.smtp.quitwait}"/>
+        <property name="socketFactoryClass" value="${mail.smtp.socketFactory.class}"/>
+        <property name="socketFactoryPort" value="${mail.smtp.socketFactory.port}"/>
+    </bean>
+
+    <bean id="paymentCurrencyFactory" class="com.platform.data.utils.CurrencyFactory">
+        <property name="code" value="${payment.currency}"/>
+    </bean>
+
+    <bean id="paymentTransactionService" class="com.platform.data.service.impl.PaymentTransactionServiceImpl">
+        <constructor-arg name="merchantId" value="${payment.merchantId}" />
+        <constructor-arg name="currency">
+            <bean class="java.util.Currency" factory-bean="paymentCurrencyFactory" factory-method="getCurrency"/>
+        </constructor-arg>
+        <constructor-arg name="secretKey" value="${payment.secretKey}"/>
+        <constructor-arg name="paymentHost" value="${payment.host}"/>
+        <constructor-arg name="tariffLifetimeInHours" value="${user.tariff.lifetime.in.hours}"/>
+    </bean>
+
+    <bean id="tariffService" class="com.platform.data.service.impl.TariffServiceImpl"/>
+
+    <bean id="paymentSignUtil" class="com.platform.data.utils.PaymentSignUtil">
+        <property name="secretKey" value="${payment.secretKey}"/>
+    </bean>
+
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"/>
+
+    <bean id="contextHolder" class="com.platform.data.utils.ContextHolder" scope="singleton">
+        <property name="passwordLength" value="8"/>
+    </bean>
+
+    <!-- batch jobs. scope should be the prototype -->
+    <bean name="mailingBatchJob" id="mailingBatchJob" class="com.platform.data.job.impl.MailingBatchJob" scope="prototype">
+        <constructor-arg name="size" value="100" />
+        <constructor-arg name="fromEmailAddress" value="${user.address.support}" />
+        <constructor-arg name="mailingSubject" value="${user.mailing.subject}" />
+    </bean>
+
+    .......
+</beans>

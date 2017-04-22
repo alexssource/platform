@@ -1,0 +1,20 @@
+<!-- Modal -->
+<div class="modal fade" id="platformModal" role="dialog" ngClass="{{ getBackgroundColorClass() }}">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" *ngIf="getHeader()">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ getHeader() }}</h4>
+            </div>
+            <div class="modal-body" align="center">
+                <h3 [innerHTML]="getMessage()"></h3>
+            </div>
+            <div class="modal-footer" *ngIf="getCanShowFooter()">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

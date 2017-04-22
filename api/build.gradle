@@ -1,0 +1,31 @@
+version = '1.0'
+
+subprojects {
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+
+
+    repositories() {
+        mavenCentral()
+    }
+
+    configurations {
+        provided {
+            // make it a private Ivy configuration
+            visible = false
+        }
+
+        // Add all provided jars including transitive dependencies of
+        // each jar, on testCompile classpath, to facilitate testing
+        testCompile {
+            extendsFrom provided
+        }
+    }
+
+
+    dependencies() {
+        testCompile group: 'junit', name: 'junit', version: gradle.junitVersion
+        testCompile 'org.mockito:mockito-core:2.3.11'
+    }
+
+}

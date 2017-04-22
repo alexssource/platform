@@ -1,0 +1,9 @@
+.modal-error {
+    background-color: #e5caa9;
+    opacity: 0.8;
+}
+
+.modal-success {
+    background-color: #b8e5ba;
+    opacity: 0.8;
+}

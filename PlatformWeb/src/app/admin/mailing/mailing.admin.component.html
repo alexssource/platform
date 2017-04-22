@@ -1,0 +1,53 @@
+<p-confirmDialog header="Точно?" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+<div id="admin-mailing">
+    <h3>Рассылка Email подписчикам</h3>
+
+    <div id="mailing-sending-form" class="col-lg-8">
+        <form (ngSubmit)="sendEmails()">
+            <div class="form-group">
+                <label for="type">Содержимое рассылки:</label>
+                <p-editor id="message" name="message" [(ngModel)]="message" [style]="{'height':'500px'}"></p-editor>
+            </div>
+            <div class="col-lg-12 col-lg-offset-3">
+                <button type="button" class="btn btn-info" (click)="preprocessor()">Препроцессор</button>
+                <button type="submit" class="btn btn-warning">Отправить подписчикам</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-lg-3">
+        <div id="mailing-template-selector">
+            <form (ngSubmit)="loadTemplate()">
+                <div class="form-group">
+                    <label for="type">Выберите тип шаблона:</label>
+                    <select [(ngModel)]="type" name="type" id="type" class="form-control">
+                        <option *ngFor="let type of getTemplateTypes()" value="{{ type }}">{{ type }}</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success center-block">Загрузить шаблон</button>
+            </form>
+        </div>
+        <div id="mailing-template-preprocessor-help">
+            Доступные шаблоны препроцессоров:
+            <ul>
+                <li>
+                    <a class="preprocessor-directive" #bugfixLink ngxClipboard [ngxClipboard]="bugfixLink" (cbOnSuccess)="clipboardCopied()">
+                        $&#123;#include('BUGTRACKER_BUG_FIXES', 7)&#125;
+                    </a>, где 7 - количество дней,
+                    в течении которых брать фиксы багов
+                </li>
+                <li>
+                    <a class="preprocessor-directive" #newBugLink ngxClipboard [ngxClipboard]="newBugLink" (cbOnSuccess)="clipboardCopied()">
+                        $&#123;#include('BUGTRACKER_NEW_TASKS', 7)&#125;
+                    </a>, где 7 - количество дней,
+                    в течении которых брать новые баги
+                </li>
+            </ul>
+
+            <br />
+            <div *ngIf="loading" class="loader center-block"></div>
+        </div>
+    </div>
+
+</div>

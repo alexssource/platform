@@ -1,0 +1,20 @@
+.register-button {
+    margin-left: 120px;
+}
+
+.font-custom {
+    font-size: 17px;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.h2-profile {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif
+}
+
+.error-border {
+    border-color: red;
+}
+
+.panel-custom {
+    margin-top: 150px;
+}

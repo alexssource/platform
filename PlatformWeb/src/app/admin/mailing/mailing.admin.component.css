@@ -1,0 +1,16 @@
+#mailing-template-selector {
+    margin: 2% 4%;
+    padding: 5%;
+    border: 1px solid;
+    background-color: rgba(194, 208, 200, 0.23);
+}
+
+#mailing-template-preprocessor-help {
+    margin-top: 15%;
+    font-size: small;
+}
+
+.preprocessor-directive {
+    font-size: x-small;
+    color: rgba(193,91,55,0.76);
+}

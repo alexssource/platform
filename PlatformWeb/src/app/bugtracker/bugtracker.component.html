@@ -1,0 +1,196 @@
+<div id="bugtracker col-md-7 col-md-offset-1">
+
+    <p-confirmDialog header="Подтвердите удаление" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+
+
+    <div id="menu-steps" class="col-md-9 col-md-offset-1">
+        <div class="col-md-8 col-md-offset-4">
+            <p-steps [model]="menuItems" [readonly]="false" [activeIndex]="selectedBugsType"></p-steps>
+        </div>
+    </div>
+
+    <div *ngIf="bugsPage != null"class="col-md-10 col-md-offset-2" >
+        <div *ngFor="let bug of bugsPage.content" class="col-sm-10">
+            <div class="panel panel-white post panel-shadow">
+                <h3>
+                    {{ bug.name }}
+                </h3>
+                <div class="post-heading">
+                    <div class="pull-left image">
+                        <img src="/assets/images/system/avatar.png" class="img-circle avatar" alt="user profile image">
+                    </div>
+                    <div class="pull-left meta">
+                        <div class="title">
+                            <a><b>{{ bug.user.email }}</b></a>
+                        </div>
+                        <div class="text-muted col-md-12 clear-padding">
+                            <div class="col-md-9 clear-padding">
+                                Type: <span class="{{BugType[bug.type].toLowerCase()}}">{{ BugType[bug.type] }}</span>&nbsp;
+                            </div>
+                            <div class="col-md-3 clear-padding">
+                <span *ngIf="getUser().role != Role.ROLE_ADMIN" class="bug-status"
+                      [ngClass]="{'OPENED':'btn-info', 'IN_PROGRESS':'btn-warning', 'FIXED':'btn-success', 'WONT_FIX': 'btn-danger', 'CANNOT_REPRODUCE': 'btn-default disabled'}[BugStatus[bug.status]]">[{{ BugStatus[bug.status] }}]</span>
+                                <div *ngIf="getUser().role == Role.ROLE_ADMIN" class="editable">
+                                    <p-inplace [active]="bug.id == inplaceBugStatusEntry.bugId"
+                                               (onActivate)="showEditBugStatusForm(bug)">
+                    <span class="bug-status"
+                          [ngClass]="{'OPENED':'btn-info', 'IN_PROGRESS':'btn-warning', 'FIXED':'btn-success', 'WONT_FIX': 'btn-danger', 'CANNOT_REPRODUCE': 'btn-default disabled'}[BugStatus[bug.status]]"
+                          pInplaceDisplay>[{{ BugStatus[bug.status] }}]</span>
+                                        <div pInplaceContent>
+                          <span class="input-group">
+                            <select [(ngModel)]="inplaceBugStatusEntry.status" name="type" class="form-control">
+                              <option *ngFor="let status of getBugStatuses()"
+                                      value="{{BugStatus[status]}}">{{ status }}</option>
+                            </select>
+                            <button (click)="editBugStatus(bug)" class="btn-success">Сохранить</button>
+                            <button (click)="resetEditBugStatusForm()" class="btn-danger">Отменить</button>
+                          </span>
+                                        </div>
+                                    </p-inplace>
+                                </div>
+                            </div>
+
+                        </div>
+                        <h6 class="text-muted time"
+                            [date]="bug.resolvedDate != null ? bug.resolvedDate : bug.createdDate"></h6>
+                    </div>
+                </div>
+                <div class="post-description">
+                    <p [innerHtml]="getHtmlMultiLineText(bug.description)"></p>
+                    <div *ngIf="getUser().username == bug.user.email" class="post-edit">
+                        <a (click)="showEditBugForm(bug)">Редактировать</a>
+                    </div>
+                    <div class="stats">
+                        <a (click)="vote(bug.id)" class="btn stat-item"
+                           [ngClass]="bug.hasVoted ? 'btn-success' : 'btn-default'"
+                           pTooltip="Количество голосов">
+                            <i class="fa fa-thumbs-up icon"></i>{{bug.votesCount}}
+                        </a>
+                        <a (click)="loadComments(bug.id)" class="btn stat-item"
+                           [ngClass]="canShowComments(bug.id) ? 'btn-info' : 'btn-default'"
+                           pTooltip="Количество комментариев">
+                            <i class="fa fa-comments icon"></i>{{bug.commentsCount}}
+                        </a>
+                    </div>
+                </div>
+                <div *ngIf="isLoadingComments(bug.id)" class="post-footer">
+                    <div class="center-block loader"></div>
+                </div>
+                <div *ngIf="canShowComments(bug.id)" class="post-footer">
+                    <form (ngSubmit)="createComment(bug.id)" #form="ngForm" class="form-horizontal">
+                        <div class="input-group">
+              <textarea [(ngModel)]="bugCommentForm.comment" name="comment" class="form-control"
+                        placeholder="Add a comment"></textarea>
+                            <span class="input-group-addon">
+                  <button type="submit" pTooltip="Отправить"><i class="fa fa-edit"></i></button>
+                </span>
+                        </div>
+                    </form>
+                    <ul class="comments-list">
+                        <li *ngFor="let comment of commentsEntry.comments.content" class="comment">
+                            <a class="pull-left">
+                                <img class="avatar" src="/assets/images/system/avatar.png" alt="avatar">
+                            </a>
+                            <div class="comment-body">
+                                <div class="comment-heading">
+                                    <h4 class="user">{{ comment.owner }}</h4>
+                                    <h5 class="time" [date]="comment.createdDate"></h5>
+                                    <span *ngIf="getUser().username == comment.owner" class="pull-right post-edit">
+                    <a class="post-edit remove-field-control" (click)="removeComment(comment)">Удалить</a>
+                  </span>
+                                </div>
+                                <div *ngIf="getUser().username != comment.owner">
+                                    <span [innerHtml]="getHtmlMultiLineText(comment.comment)"></span>
+                                </div>
+                                <div *ngIf="getUser().username == comment.owner" class="editable">
+                                    <p-inplace [active]="comment.id == inplaceCommentEntry.commentId"
+                                               (onActivate)="showEditCommentForm(comment)">
+                                        <span [innerHtml]="getHtmlMultiLineText(comment.comment)"
+                                              pInplaceDisplay></span>
+                                        <span pInplaceContent>
+                        <div class="input-group">
+                            <textarea [(ngModel)]="inplaceCommentEntry.comment" name="comment"
+                                      class="form-control"></textarea>
+                            <span class="input-group-addon">
+                              <button (click)="editComment(comment)" type="button" pTooltip="Сохранить"><i
+                                      class="fa fa-edit"></i></button>
+                              <button (click)="resetEditCommentForm()" type="reset" pTooltip="Отмена"><i
+                                      class="fa fa-history"></i></button>
+                            </span>
+                        </div>
+                    </span>
+                                    </p-inplace>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="text-center">
+                                <app-pager [cssClass]="'pagination-sm'"
+                                           (onPageChanged)="changeCommentsPage($event, bug.id)"
+                                           [pageable]="commentsPageable"></app-pager>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-sm-offset-2">
+            <app-pager [cssClass]="'pagination-lg'" (onPageChanged)="changeBugsPage($event)"
+                       [pageable]="pageable"></app-pager>
+        </div>
+
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="registerBug" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Добавление новой функциональности</h4>
+                </div>
+                <div class="modal-body" align="center">
+
+                    <form (ngSubmit)="saveBug()" #form="ngForm" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="type">Выберите тип задачи:</label>
+                            <div class="col-sm-7">
+                                <select [(ngModel)]="bugForm.type" name="type" class="form-control" id="type">
+                                    <option *ngFor="let type of getBugTypes()" value="{{type}}">{{ type }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="name">Краткое название:</label>
+                            <div class="col-sm-7">
+                                <input [(ngModel)]="bugForm.name" name="name" type="text" class="form-control" id="name"
+                                       placeholder="Введите заголовок">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-11">
+                <textarea [(ngModel)]="bugForm.description" name="description" id="description"
+                          class="form-control description-control" placeholder="Введите описание"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-8">
+                                <button type="submit" class="btn btn-success">
+                                    Сохранить
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

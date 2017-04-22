@@ -1,0 +1,29 @@
+<div>
+  <h3>Настройки шаблонов Email-сообщений</h3>
+
+  <form *ngIf="templates != null" (ngSubmit)="saveEmailTemplates()" class="col-lg-8">
+    <div class="form-group">
+      <label for="registration">Шаблон сообщения об успешной регистрации пользователя:</label>
+      <p-editor id="registration" name="registration" [(ngModel)]="getTemplateByType(EmailTemplateType.REGISTRATION).template" [style]="{'height':'320px'}"></p-editor>
+    </div>
+    <div class="form-group">
+      <label for="changed-password">Шаблон сообщения о смене пароля:</label>
+      <p-editor id="changed-password" name="changedPassword" [(ngModel)]="getTemplateByType(EmailTemplateType.CHANGED_PASSWORD).template" [style]="{'height':'320px'}"></p-editor>
+    </div>
+    <div class="form-group">
+      <label for="layout">Общий шаблон рассылки:</label>
+      <p-editor id="layout" name="layout" [(ngModel)]="getTemplateByType(EmailTemplateType.MAILING_LAYOUT).template" [style]="{'height':'320px'}"></p-editor>
+    </div>
+    <div class="form-group">
+      <label for="bugfix">Шаблон сообщения об исправленных багах в багтрекере:</label><br />
+      <span>Доступные переменные: $&#123;bug.name&#125;, $&#123;bug.resolvedDate&#125;</span>
+      <p-editor id="bugfix" name="bugfix" [(ngModel)]="getTemplateByType(EmailTemplateType.BUGTRACKER_BUG_FIXES).template" [style]="{'height':'320px'}"></p-editor>
+    </div>
+    <div class="form-group">
+      <label for="newTask">Шаблон сообщения о новых задачах в багтрекере:</label><br />
+      <span>Доступные переменные: $&#123;bug.name&#125;, $&#123;bug.createdDate&#125;, $&#123;bug.owner&#125;</span>
+      <p-editor id="newTask" name="newTask" [(ngModel)]="getTemplateByType(EmailTemplateType.BUGTRACKER_NEW_TASKS).template" [style]="{'height':'320px'}"></p-editor>
+    </div>
+    <button type="submit" class="btn btn-success center-block">Сохранить</button>
+  </form>
+</div>

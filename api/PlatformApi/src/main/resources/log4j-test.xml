@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="containerFile" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="false"/>
+        <param name="datePattern" value="'.'yyyy-MM-dd" />
+        <param name="file" value="/var/log/Platform/container.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="apiFile" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="false"/>
+        <param name="datePattern" value="'.'yyyy-MM-dd" />
+        <param name="file" value="/var/log/Platform/api.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="dataFile" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="false"/>
+        <param name="datePattern" value="'.'yyyy-MM-dd" />
+        <param name="file" value="/var/log/Platform/data.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="libFile" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="false"/>
+        <param name="datePattern" value="'.'yyyy-MM-dd" />
+        <param name="file" value="/var/log/Platform/lib.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="algorithmFile" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="false"/>
+        <param name="datePattern" value="'.'yyyy-MM-dd" />
+        <param name="file" value="/var/log/Platform/algorithm.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="liquibaseFile" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="false"/>
+        <param name="datePattern" value="'.'yyyy-MM-dd" />
+        <param name="file" value="/var/log/Platform/liquibase.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="batchFile" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="false"/>
+        <param name="datePattern" value="'.'yyyy-MM-dd" />
+        <param name="file" value="/var/log/Platform/batch.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd-MM-yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="containerFile"/>
+    </root>
+
+
+    <!-- additivity="false" говорит о том, чтобы сообщения с этого логгера не попадали в root логгер -->
+
+
+    <logger name="com.platform.api" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="apiFile"/>
+    </logger>
+
+    <logger name="com.platform.algorithm" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="algorithmFile"/>
+    </logger>
+
+    <logger name="com.platform.library" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="libFile"/>
+    </logger>
+
+    <logger name="com.platform.data" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="dataFile"/>
+    </logger>
+
+    <logger name="liquibase" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="liquibaseFile"/>
+    </logger>
+
+    <logger name="com.platform.batch" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="batchFile"/>
+    </logger>
+
+</log4j:configuration>

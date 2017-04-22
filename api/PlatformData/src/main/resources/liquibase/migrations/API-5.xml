@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet id="API-5-1" author="Alexander Kozlov">
+        <createTable tableName="PAYMENT_TRANSACTION">
+            <column name="TRANSACTION_ID" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="KASSA_ID" type="VARCHAR2(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CURRENCY" type="VARCHAR2(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AMOUNT" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR2(255)"/>
+            <column name="LOCALE" type="VARCHAR2(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REQUEST_CREATION_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REQUEST_CLIENT_IP_ADDRESS" type="VARCHAR2(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TRANSACTION_STATUS" type="VARCHAR2(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PAYMENT_METHOD" type="VARCHAR(64)"/>
+            <column name="PAYSYS_PURSE_ID" type="VARCHAR2(32)"/>
+            <column name="PAYSYS_CREATED_PAYMENT_DATE" type="TIMESTAMP"/>
+            <column name="PAYSYS_PROCESSED_PAYMENT_DATE" type="TIMESTAMP"/>
+            <column name="PAYSYS_TRANSACTION_ID" type="VARCHAR2(64)"/>
+            <column name="PAYSYS_PAYMENT_AMOUNT" type="DOUBLE"/>
+            <column name="PAYSYS_PAYMENT_ENROLLMENT_TO_KASSA_AMOUNT" type="DOUBLE"/>
+            <column name="PAYSYS_IP_ADDRESS" type="VARCHAR2(32)"/>
+            <column name="USER_ID" type="NUMBER(10, 0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="API-5-2" author="Alexander Kozlov">
+        <addForeignKeyConstraint baseTableName="PAYMENT_TRANSACTION" baseColumnNames="USER_ID"
+                                 constraintName="FK_PAYMENT_USER_ID"
+                                 referencedTableName="USERS"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+</databaseChangeLog>

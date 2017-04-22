@@ -1,0 +1,69 @@
+﻿body {
+    padding-bottom: 50px;
+}
+
+a {
+    cursor: pointer;
+}
+
+.help-block {
+    font-size: 12px;
+}
+
+.error {
+    color: #970000;
+    font-size: small;
+}
+
+.add-field-control {
+    cursor: pointer;
+    color: #15e966;
+    font-size: 20px;
+}
+
+.remove-field-control {
+    cursor: pointer;
+    color: #e93d5c;
+    font-size: 20px;
+}
+
+.clear {
+    clear: both;
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.main-loader {
+    position: fixed;
+    z-index: 999;
+    height: 170px;
+    width: 170px;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 20%;
+    right: 0;
+}
+
+.main-loader-image {
+    background: url("/assets/images/system/loader.gif") no-repeat center center;
+    height: 170px;
+    width: 170px;
+}

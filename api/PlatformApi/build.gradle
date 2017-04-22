@@ -1,0 +1,68 @@
+apply plugin: 'java'
+apply plugin: "war"
+apply plugin: "eclipse-wtp"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// Add provided jars on the compile classpath, this will
+// not add the transitive dependencies of each jar.
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+
+dependencies() {
+    compile project(':PlatformLibrary')
+    compile project(':PlatformData')
+    compile project(':PlatformAlgorithm')
+
+    compile "org.springframework:spring-context:${gradle.springVersion}"
+    compile "org.springframework:spring-beans:${gradle.springVersion}"
+    compile "org.springframework:spring-core:${gradle.springVersion}"
+    compile "org.springframework:spring-webmvc:${gradle.springVersion}"
+
+    compile "org.springframework.security:spring-security-web:${gradle.springSecurityVersion}"
+    compile "org.springframework.security:spring-security-config:${gradle.springSecurityVersion}"
+    compile 'io.jsonwebtoken:jjwt:0.7.0'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.6'
+
+    provided 'javax:javaee-web-api:7.0'
+}
+
+war {
+    archiveName = 'ROOT.war'
+}
+
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+
+    jdt {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    wtp {
+        facet {
+            facet name: "jst.web", version: "3.0"
+        }
+    }
+}
+
+idea {
+    module {
+        jdkName = "1.8"
+        downloadJavadoc = true
+        downloadSources = true
+        scopes.PROVIDED.plus += [configurations.provided]
+    }
+}

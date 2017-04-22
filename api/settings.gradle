@@ -1,0 +1,6 @@
+include ':PlatformLibrary', ':PlatformData', ':PlatformApi', ':../PlatformWeb', ':PlatformAlgorithm'
+
+gradle.ext.springVersion = "4.3.4.RELEASE"
+gradle.ext.springSecurityVersion = "4.2.0.RELEASE"
+gradle.ext.log4jVersion = "1.7.21"
+gradle.ext.junitVersion = "4.12"

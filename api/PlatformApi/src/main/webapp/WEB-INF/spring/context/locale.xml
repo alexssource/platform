@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        Этот файл должен импортироваться из servlet-context.xml
+    -->
+
+    <!-- Определение местонахождения файлов локализации -->
+    <bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+          id="messageSource"
+          p:basenames="/WEB-INF/i18n/application"
+          p:fallbackToSystemLocale="false"/>
+
+    <bean class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver"
+          id="localeResolver" p:defaultLocale-ref="defaultLocale"/>
+
+    <bean class="java.util.Locale" id="defaultLocale">
+        <constructor-arg name="language" value="${config.default.locale.language}"/>
+        <constructor-arg name="country" value="${config.default.locale.region}"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,82 @@
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// Add provided jars on the compile classpath, this will
+// not add the transitive dependencies of each jar.
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+dependencies() {
+    compile 'org.liquibase:liquibase-core:3.5.3'
+    compile 'com.mattbertolini:liquibase-slf4j:2.0.0'
+
+    provided project(':PlatformLibrary')
+
+    compile 'com.h2database:h2:1.4.193'
+    compile 'org.postgresql:postgresql:9.4.1212'
+
+    compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+    compile 'org.hibernate:hibernate-validator:5.3.4.Final'
+    compile 'org.hibernate:hibernate-entitymanager:5.2.5.Final'
+    compile 'org.hibernate:hibernate-java8:5.2.8.Final' // for the new Java 8 Date and Time API
+
+    compile "org.springframework:spring-orm:${gradle.springVersion}"
+    compile('org.springframework.data:spring-data-jpa:1.10.5.RELEASE') {
+        exclude group: 'org.hibernate.javax.persistence'
+    }
+
+    compile "org.springframework.security:spring-security-core:${gradle.springSecurityVersion}"
+
+    testCompile "org.springframework:spring-context:${gradle.springVersion}"
+    testCompile "org.springframework:spring-beans:${gradle.springVersion}"
+    testCompile "org.springframework:spring-test:${gradle.springVersion}"
+    testCompile "org.springframework.security:spring-security-test:${gradle.springSecurityVersion}"
+
+    compile 'javax.mail:javax.mail-api:1.5.6'
+    compile 'com.sun.mail:smtp:1.5.6'
+    compile 'com.sun.mail:mailapi:1.5.6'
+}
+
+eclipse {
+    wtp {
+        facet {
+            facet name: 'jst.ejb', version: '3.1'
+        }
+    }
+}
+
+task printVersion {
+    println "spring version: ${gradle.springVersion}"
+}
+
+
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+
+    jdt {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+}
+
+idea {
+    module {
+        jdkName = "1.8"
+        downloadJavadoc = true
+        downloadSources = true
+        scopes.PROVIDED.plus += [configurations.provided]
+    }
+}

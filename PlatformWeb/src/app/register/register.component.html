@@ -1,0 +1,54 @@
+﻿<div id="signupbox" style="margin-top:50px" class="mainbox col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+
+    <div class="panel panel-info panel-custom">
+        <div class="panel-heading">
+            <div class="panel-title font-custom">Регистрация</div>
+            <div style="float:right; font-size: 90%; position: relative; top:-10px" class="font-custom">
+                <a id="signinlink" [routerLink]="['/login']"
+                   onclick="$('#signupbox').hide(); $('#loginbox').show()">Войти
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form
+                    id="signupform"
+                    name="registerForm"
+                    class="form-horizontal"
+                    (ngSubmit)="r.form.valid && register()"
+                    #r="ngForm"
+                    [formGroup]="registerForm">
+                <div id="signupalert" style="display:none" class="alert alert-danger font-custom">
+                    <p>Error:</p>
+                    <span></span>
+                </div>
+                <div class="error" *ngIf="!registerForm.controls['email'].valid && submitted">
+                    * Введите корректный email адрес, пожалуйста!
+                </div>
+
+                <div class="form-group"
+                     [ngClass]="{'has-error':
+             !registerForm.controls['email'].valid && registerForm.controls['email'].dirty
+             || submitted && !registerForm.controls['email'].valid}">
+                    <div class="col-md-12">
+                        <input id="email"
+                               type="text"
+                               class="form-control  font-custom"
+                               name="email"
+                               placeholder="email"
+                               formControlName="email">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <!-- Button -->
+                    <div class="col-md-offset-1 col-md-8 register-button">
+                        <button [disabled]="loading" class="btn btn-primary font-custom" (click)="setSubmitted(true)"><i
+                                class="icon-hand-right"></i>Зарегистрироваться
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
